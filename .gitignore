@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Virtual environment
+email_agent/
+
+# Credentials and tokens
+credentials.json
+token.json
+.env
+
+# OS / IDE files
+.DS_Store
+.idea/
+.vscode/
