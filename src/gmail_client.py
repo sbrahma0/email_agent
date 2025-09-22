@@ -3,6 +3,8 @@ import pickle
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
+
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
@@ -34,3 +36,17 @@ def get_gmail_service():
             pickle.dump(creds, token)
 
     return build("gmail", "v1", credentials=creds)
+
+
+def fetch_latest_emails(n=5):
+    """Fetch latest n emails. Returns a list of dicts with 'id', 'sender', 'time'."""
+    # Connect to Gmail and fetch messages
+    # Return list of dicts: [{'id': 'xxx', 'sender': 'John Doe', 'time': 'Thu ...'}, ...]
+    pass
+
+
+def fetch_email_content(email_id):
+    """Return the plain text or snippet of a specific email by ID."""
+    pass
+
+

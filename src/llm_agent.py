@@ -1,43 +1,22 @@
 import os
-from groq import Groq
+from langchain_groq import ChatGroq
 from dotenv import load_dotenv
+from langchain.schema import AIMessage, BaseMessage
 
-# Load environment variables from .env
 load_dotenv()
 
-# Initialize Groq client
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+llm = ChatGroq(
+    model="llama-3.1-8b-instant",
+    api_key=os.getenv("GROQ_API_KEY")
+)
 
 
-def ask_llm(
-    prompt: str,
-    system_prompt: str = "You are a helpful assistant."
-) -> str:
-    """
-    Send a prompt to Groq LLM and return the response text.
-
-    Args:
-        prompt (str): The user's question or instruction.
-        system_prompt (str, optional): System instructions for LLM behavior.
-
-    Returns:
-        str: LLM's response, or fallback message if something goes wrong.
-    """
+def ask_llm(messages: list) -> BaseMessage:
+    """Send a multi-turn message list to Groq LLM and return its response.
+    Handles API errors gracefully and returns an error message if it fails."""
     try:
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": prompt}
-            ]
-        )
-
-        # Extract response content safely
-        if response.choices and response.choices[0].message:
-            return response.choices[0].message.content.strip()
-        else:
-            return "[LLM returned no content]"
-
+        response = llm.invoke(messages)
+        return response
     except Exception as e:
-        # Catch API/network errors
-        return f"[Error communicating with LLM: {e}]"
+        # Return a message in the same format
+        return AIMessage(content=f"⚠️ Unable to get LLM response: {str(e)}")
